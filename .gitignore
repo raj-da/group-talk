@@ -1,3 +1,4 @@
 # Firebase config
 grouptalk/android/app/google-services.json
 grouptalk/ios/Runner/GoogleService-info.plist
+grouptalk/lib/firebase_options.dart
