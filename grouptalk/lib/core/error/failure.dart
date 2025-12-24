@@ -15,3 +15,7 @@ class ServerFailure extends Failure {
 class CacheFailure extends Failure {
   const CacheFailure({super.failureMassage = 'Cache Failure'});
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure({super.failureMassage = 'Network Failure'});
+}
