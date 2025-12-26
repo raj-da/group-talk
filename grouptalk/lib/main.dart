@@ -1,11 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grouptalk/core/core/Route/app_router.dart';
+import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:grouptalk/firebase_options.dart';
+import 'injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAuth.instance.setSettings(
+    appVerificationDisabledForTesting: true,
+  );
+  await di.init();
   runApp(const MyApp());
 }
 
@@ -15,27 +24,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return MultiBlocProvider(
+      providers: [
+        // Auth bloc
+        BlocProvider(create: (context) => di.sl<AuthBloc>()),
+      ],
+      child: MaterialApp.router(
+        routerConfig: router,
+        title: "Grout talk",
+        debugShowCheckedModeBanner: false,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -74,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     addTestDocument();
   }
 
-   Future<void> addTestDocument() async {
+  Future<void> addTestDocument() async {
     try {
       await FirebaseFirestore.instance.collection('test_collection').add({
         'message': 'Hello, Firestore!',
