@@ -60,6 +60,11 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Either<Failure, void>> logout() async {
+    // If device is offline
+    if (!await networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    
     try {
       await authRemoteDataSource.logout();
       return const Right(null);
