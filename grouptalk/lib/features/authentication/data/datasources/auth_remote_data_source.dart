@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grouptalk/core/error/exception.dart';
@@ -15,6 +16,7 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> registerWithEmail({
     required String email,
     required String password,
+    required String fullName,
   });
 
   Future<void> logout();
@@ -22,7 +24,11 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
-  AuthRemoteDataSourceImpl({required this.firebaseAuth});
+  final FirebaseFirestore firestore;
+  AuthRemoteDataSourceImpl({
+    required this.firebaseAuth,
+    required this.firestore,
+  });
 
   @override
   Future<UserModel> loginWithEmail({
@@ -50,6 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> registerWithEmail({
     required String email,
     required String password,
+    required String fullName,
   }) async {
     try {
       final credential = await firebaseAuth.createUserWithEmailAndPassword(
@@ -61,6 +68,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user == null) {
         throw ServerException(errorMessage: 'User Creation failed');
       }
+      await user.updateDisplayName(fullName);
+
+      await firestore.collection('users').doc(user.uid).set({
+        'fullName': fullName,
+        'email': email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
 
       return UserModel.fromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
@@ -75,7 +89,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Stream<UserEntity?> authStateChanges() {
-    debugPrint('Auth State Change Function. ==================================================== ');
+    debugPrint(
+      'Auth State Change Function. ==================================================== ',
+    );
     return firebaseAuth.authStateChanges().map((user) {
       if (user == null) return null;
 

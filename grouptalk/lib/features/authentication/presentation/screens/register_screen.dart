@@ -23,11 +23,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _register() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final fullName = _fullNameController.text.trim();
 
     if (email.isEmpty || password.isEmpty) return;
 
     context.read<AuthBloc>().add(
-      RegisterWithEmailEvent(email: email, password: password),
+      RegisterWithEmailEvent(email: email, password: password, fullName: fullName),
     );
   }
 

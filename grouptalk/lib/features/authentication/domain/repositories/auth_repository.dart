@@ -13,6 +13,7 @@ abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> registerWithEmail({
     required String email,
     required String password,
+    required String fullName,
   });
 
   Future<Either<Failure, void>> logout();

@@ -10,5 +10,6 @@ class RegisterUser {
   Future<Either<Failure, UserEntity>> call({
     required String email,
     required String password,
-  }) => authRepository.registerWithEmail(email: email, password: password);
+    required String fullName,
+  }) => authRepository.registerWithEmail(email: email, password: password, fullName: fullName);
 }

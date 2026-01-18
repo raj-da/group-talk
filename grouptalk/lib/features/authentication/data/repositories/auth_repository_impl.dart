@@ -41,6 +41,7 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either<Failure, UserEntity>> registerWithEmail({
     required String email,
     required String password,
+    required String fullName,
   }) async {
     // If device is offline
     if (!await networkInfo.isConnected) {
@@ -51,6 +52,7 @@ class AuthRepositoryImpl extends AuthRepository {
       final user = await authRemoteDataSource.registerWithEmail(
         email: email,
         password: password,
+        fullName: fullName,
       );
       return right(user);
     } on ServerException catch (e) {

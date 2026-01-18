@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grouptalk/core/network/network_info.dart';
@@ -18,6 +19,7 @@ Future<void> init() async {
   //* Firebase
   //* ========================
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance,);
 
   //* ========================
   //* Network info
@@ -55,7 +57,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<LogoutUser>(() => LogoutUser(authRepository: sl()));
 
-  sl.registerLazySingleton<GetAuthState>(() => GetAuthState(authRepository: sl()));
+  sl.registerLazySingleton<GetAuthState>(
+    () => GetAuthState(authRepository: sl()),
+  );
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -64,6 +68,6 @@ Future<void> init() async {
 
   // Data Source
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(firebaseAuth: sl()),
+    () => AuthRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
   );
 }
