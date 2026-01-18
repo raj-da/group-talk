@@ -115,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           child: state is AuthLoading
                               ? const CircularProgressIndicator()
-                              : const Text('Login'),
+                              : const Text('Sign Up'),
                         ),
                       );
                     },
