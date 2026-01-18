@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:grouptalk/core/error/exception.dart';
 import 'package:grouptalk/features/authentication/data/models/user_model.dart';
+import 'package:grouptalk/features/authentication/domain/entities/user_entity.dart';
 
 abstract class AuthRemoteDataSource {
+  Stream<UserEntity?>
+  authStateChanges(); //? keep track of authentication state of user
   Future<UserModel> loginWithEmail({
     required String email,
     required String password,
@@ -67,5 +71,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> logout() async {
     await firebaseAuth.signOut();
+  }
+
+  @override
+  Stream<UserEntity?> authStateChanges() {
+    debugPrint('Auth State Change Function. ==================================================== ');
+    return firebaseAuth.authStateChanges().map((user) {
+      if (user == null) return null;
+
+      return UserEntity(
+        id: user.uid,
+        email: user.email ?? '',
+        isEmailVerified: user.emailVerified,
+      );
+    });
   }
 }

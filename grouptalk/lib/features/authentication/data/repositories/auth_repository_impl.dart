@@ -64,12 +64,17 @@ class AuthRepositoryImpl extends AuthRepository {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
-    
+
     try {
       await authRemoteDataSource.logout();
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(failureMassage: e.errorMessage));
     }
+  }
+
+  @override
+  Stream<UserEntity?> authStateChange() {
+    return authRemoteDataSource.authStateChanges();
   }
 }

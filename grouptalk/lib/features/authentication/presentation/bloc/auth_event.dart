@@ -28,3 +28,9 @@ class RegisterWithEmailEvent extends AuthEvent {
 }
 
 class LogoutEvent extends AuthEvent {}
+
+class AuthStateChangedEvent extends AuthEvent {
+  final UserEntity? user;
+
+  const AuthStateChangedEvent({required this.user});
+}

@@ -4,6 +4,7 @@ import 'package:grouptalk/core/network/network_info.dart';
 import 'package:grouptalk/features/authentication/data/datasources/auth_remote_data_source.dart';
 import 'package:grouptalk/features/authentication/data/repositories/auth_repository_impl.dart';
 import 'package:grouptalk/features/authentication/domain/repositories/auth_repository.dart';
+import 'package:grouptalk/features/authentication/domain/usecases/get_auth_state.dart';
 import 'package:grouptalk/features/authentication/domain/usecases/login_user.dart';
 import 'package:grouptalk/features/authentication/domain/usecases/logout_user.dart';
 import 'package:grouptalk/features/authentication/domain/usecases/register_user.dart';
@@ -37,7 +38,12 @@ Future<void> init() async {
 
   // Bloc
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(loginUser: sl(), registerUser: sl(), logoutUser: sl()),
+    () => AuthBloc(
+      loginUser: sl(),
+      registerUser: sl(),
+      logoutUser: sl(),
+      getAuthState: sl(),
+    ),
   );
 
   // Use cases
@@ -48,6 +54,8 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<LogoutUser>(() => LogoutUser(authRepository: sl()));
+
+  sl.registerLazySingleton<GetAuthState>(() => GetAuthState(authRepository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

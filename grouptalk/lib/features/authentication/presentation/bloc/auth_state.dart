@@ -11,6 +11,8 @@ final class AuthInitial extends AuthState {}
 
 final class AuthLoading extends AuthState {}
 
+final class AuthUnauthenticated extends AuthState {}
+
 final class AuthAuthenticated extends AuthState {
   final UserEntity user;
 
@@ -20,7 +22,6 @@ final class AuthAuthenticated extends AuthState {
   List<Object> get props => [user];
 }
 
-final class AuthUnauthenticated extends AuthState {}
 
 final class AuthError extends AuthState {
   final String message;
