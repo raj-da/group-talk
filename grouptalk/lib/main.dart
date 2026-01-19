@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:grouptalk/core/core/Route/app_router.dart';
 import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:grouptalk/features/room/presentation/bloc/room_bloc.dart';
 import 'package:grouptalk/firebase_options.dart';
 import 'injection_container.dart' as di;
 
@@ -29,11 +30,18 @@ class MyApp extends StatelessWidget {
       providers: [
         // Auth bloc
         BlocProvider(create: (context) => di.sl<AuthBloc>()),
+
+        // Room bloc
+        BlocProvider(create: (context) => di.sl<RoomBloc>()),
       ],
       child: MaterialApp.router(
         routerConfig: router,
         title: "Grout talk",
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: const Color(0xFF009688),
+          scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+        ),
       ),
     );
   }

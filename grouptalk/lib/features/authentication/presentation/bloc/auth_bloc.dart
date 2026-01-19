@@ -26,15 +26,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.logoutUser,
     required this.getAuthState,
   }) : super(AuthInitial()) {
-    on<AuthEvent>((event, emit) {
-      on<AuthStateChangedEvent>(_onAuthStateChanged);
-      on<LoginWithEmailEvent>(_onLogin);
-      on<RegisterWithEmailEvent>(_onRegister);
-      on<LogoutEvent>(_onLogout);
+    on<AuthStateChangedEvent>(_onAuthStateChanged);
+    on<LoginWithEmailEvent>(_onLogin);
+    on<RegisterWithEmailEvent>(_onRegister);
+    on<LogoutEvent>(_onLogout);
 
-      _authSubscription = getAuthState().listen((user) {
-        add(AuthStateChangedEvent(user: user));
-      });
+    _authSubscription = getAuthState().listen((user) {
+      add(AuthStateChangedEvent(user: user));
     });
   }
 
