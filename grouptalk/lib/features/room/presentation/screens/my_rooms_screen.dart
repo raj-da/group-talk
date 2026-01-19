@@ -20,6 +20,7 @@ class MyRoomsScreen extends StatefulWidget {
 
 class _MyRoomsScreenState extends State<MyRoomsScreen> {
   int _selectedIndex = 0;
+  String? _lastUserName;
 
   @override
   void initState() {
@@ -49,10 +50,16 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
                       context.read<AuthBloc>().add(LogoutEvent());
                     },
                     mainMessage: "My Study Rooms",
-                    smallMessage: "Welcome back, ${state.user.name ?? ''}!"
+                    smallMessage: "Welcome back, ${state.user.name ?? ''}!",
                   );
                 }
-                return const SizedBox.shrink();
+                // For other states (loading/unauthenticated) keep showing header with last-known name
+                return customHeader(
+                  userName: _lastUserName ?? 'Guest',
+                  onLogout: () => context.read<AuthBloc>().add(LogoutEvent()),
+                  mainMessage: "My Study Rooms",
+                  smallMessage: "Welcome back, ${_lastUserName ?? 'Guest'}!",
+                );
               },
             ),
 
@@ -105,7 +112,7 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
           ],
         ),
 
-        bottomNavigationBar: bottomNavBar(context, _selectedIndex)
+        bottomNavigationBar: bottomNavBar(context, _selectedIndex),
       ),
     );
   }

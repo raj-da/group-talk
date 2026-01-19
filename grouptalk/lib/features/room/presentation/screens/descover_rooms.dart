@@ -21,6 +21,7 @@ class DescoverRooms extends StatefulWidget {
 
 class _DescoverRoomsState extends State<DescoverRooms> {
   int _selectedIndex = 1;
+  String? _lastUserName;
 
   @override
   void initState() {
@@ -28,82 +29,92 @@ class _DescoverRoomsState extends State<DescoverRooms> {
     super.initState();
   }
 
- @override
-Widget build(BuildContext context) {
-  return BlocListener<AuthBloc, AuthState>(
-    listener: (context, state) {
-      if (state is AuthUnauthenticated) {
-        context.goNamed(RouteName.login);
-      }
-    },
-    child: BlocListener<RoomBloc, RoomState>(
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is RoomActionSuccess) {
-          // Defer navigation until after build
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.goNamed(RouteName.home);
-          });
+        if (state is AuthUnauthenticated) {
+          context.goNamed(RouteName.login);
         }
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthAuthenticated) {
+      child: BlocListener<RoomBloc, RoomState>(
+        listener: (context, state) {
+          if (state is RoomActionSuccess) {
+            // Defer navigation until after build
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.goNamed(RouteName.home);
+            });
+          }
+        },
+        child: Scaffold(
+          body: Column(
+            children: [
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthAuthenticated) {
+                    return customHeader(
+                      userName: state.user.name ?? '',
+                      onLogout: () {
+                        context.read<AuthBloc>().add(LogoutEvent());
+                      },
+                      mainMessage: 'Discover Rooms',
+                      smallMessage: 'Join Public Study Rooms',
+                    );
+                  }
+                  // For other states (loading/unauthenticated) keep showing header with last-known name
                   return customHeader(
-                    userName: state.user.name ?? '',
-                    onLogout: () {
-                      context.read<AuthBloc>().add(LogoutEvent());
-                    },
-                    mainMessage: 'Discover Rooms',
-                    smallMessage: 'Join Public Study Rooms',
+                    userName: _lastUserName ?? 'Guest',
+                    onLogout: () => context.read<AuthBloc>().add(LogoutEvent()),
+                    mainMessage: "My Study Rooms",
+                    smallMessage: "Welcome back, ${_lastUserName ?? 'Guest'}!",
                   );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  searchBar(),
-                  const SizedBox(height: 20),
-                  BlocBuilder<RoomBloc, RoomState>(
-                    builder: (context, state) {
-                      if (state is RoomLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (state is RoomLoaded) {
-                        if (state.rooms.isEmpty) {
-                          return const Center(child: Text('No rooms Found yet'));
-                        }
-                        return Column(
-                          children: state.rooms.map((room) {
-                            return discoverCard(
-                              id: room.id,
-                              title: room.name,
-                              description: room.description,
-                              time: '5 min',
-                              context: context,
-                            );
-                          }).toList(),
-                        );
-                      }
-                      if (state is RoomError) {
-                        return Text(state.message);
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ],
+                },
               ),
-            ),
-          ],
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    searchBar(),
+                    const SizedBox(height: 20),
+                    BlocBuilder<RoomBloc, RoomState>(
+                      builder: (context, state) {
+                        if (state is RoomLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (state is RoomLoaded) {
+                          if (state.rooms.isEmpty) {
+                            return const Center(
+                              child: Text('No rooms Found yet'),
+                            );
+                          }
+                          return Column(
+                            children: state.rooms.map((room) {
+                              return discoverCard(
+                                id: room.id,
+                                title: room.name,
+                                description: room.description,
+                                time: '5 min',
+                                context: context,
+                              );
+                            }).toList(),
+                          );
+                        }
+                        if (state is RoomError) {
+                          return Text(state.message);
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: bottomNavBar(context, _selectedIndex),
         ),
-        bottomNavigationBar: bottomNavBar(context, _selectedIndex),
       ),
-    ),
-  );
-}
+    );
+  }
 }
