@@ -5,6 +5,7 @@ import 'package:grouptalk/core/router/auth_notifier.dart';
 import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:grouptalk/features/authentication/presentation/screens/login_screen.dart';
 import 'package:grouptalk/features/authentication/presentation/screens/register_screen.dart';
+import 'package:grouptalk/features/room/presentation/screens/descover_rooms.dart';
 import 'package:grouptalk/features/room/presentation/screens/my_rooms_screen.dart';
 // import 'package:grouptalk/main.dart';
 import 'package:grouptalk/injection_container.dart' as di;
@@ -43,5 +44,10 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
 
+    GoRoute(
+      path: '/publicRooms',
+      name: RouteName.discoverRooms,
+      builder: (context, state) => const DescoverRooms(),
+    ),
   ],
 );

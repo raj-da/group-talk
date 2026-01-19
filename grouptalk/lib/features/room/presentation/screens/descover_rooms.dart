@@ -5,97 +5,94 @@ import 'package:go_router/go_router.dart';
 import 'package:grouptalk/core/core/Route/route_name.dart';
 import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:grouptalk/features/room/presentation/bloc/room_bloc.dart';
-import 'package:grouptalk/features/room/presentation/widgets/action_buttons.dart';
+// import 'package:grouptalk/features/room/presentation/widgets/action_buttons.dart';
 import 'package:grouptalk/features/room/presentation/widgets/bottom_navbar.dart';
+import 'package:grouptalk/features/room/presentation/widgets/discover_card.dart';
 import 'package:grouptalk/features/room/presentation/widgets/header.dart';
-import 'package:grouptalk/features/room/presentation/widgets/room_card.dart';
+// import 'package:grouptalk/features/room/presentation/widgets/room_card.dart';
 import 'package:grouptalk/features/room/presentation/widgets/search_bar.dart';
 
-class MyRoomsScreen extends StatefulWidget {
-  const MyRoomsScreen({super.key});
+class DescoverRooms extends StatefulWidget {
+  const DescoverRooms({super.key});
 
   @override
-  State<MyRoomsScreen> createState() => _MyRoomsScreenState();
+  State<DescoverRooms> createState() => _DescoverRoomsState();
 }
 
-class _MyRoomsScreenState extends State<MyRoomsScreen> {
-  int _selectedIndex = 0;
+class _DescoverRoomsState extends State<DescoverRooms> {
+  int _selectedIndex = 1;
 
   @override
   void initState() {
-    context.read<RoomBloc>().add(LoadJoinedRooms());
+    context.read<RoomBloc>().add(LoadPublicRooms());
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
+ @override
+Widget build(BuildContext context) {
+  return BlocListener<AuthBloc, AuthState>(
+    listener: (context, state) {
+      if (state is AuthUnauthenticated) {
+        context.goNamed(RouteName.login);
+      }
+    },
+    child: BlocListener<RoomBloc, RoomState>(
       listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          context.goNamed(RouteName.login);
+        if (state is RoomActionSuccess) {
+          // Defer navigation until after build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.goNamed(RouteName.home);
+          });
         }
       },
       child: Scaffold(
         body: Column(
           children: [
-            // Custom Header
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthAuthenticated) {
-                  debugPrint("My room Screen ============================>");
                   return customHeader(
                     userName: state.user.name ?? '',
                     onLogout: () {
                       context.read<AuthBloc>().add(LogoutEvent());
                     },
-                    mainMessage: "My Study Rooms",
-                    smallMessage: "Welcome back, ${state.user.name ?? ''}!"
+                    mainMessage: 'Discover Rooms',
+                    smallMessage: 'Join Public Study Rooms',
                   );
                 }
                 return const SizedBox.shrink();
               },
             ),
-
-            // Scrollable Content
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
                   searchBar(),
                   const SizedBox(height: 20),
-                  actionButton(context),
-                  const SizedBox(height: 20),
-
                   BlocBuilder<RoomBloc, RoomState>(
                     builder: (context, state) {
                       if (state is RoomLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
                       if (state is RoomLoaded) {
                         if (state.rooms.isEmpty) {
-                          return const Center(
-                            child: Text('No rooms joined yet'),
-                          );
+                          return const Center(child: Text('No rooms Found yet'));
                         }
-
                         return Column(
                           children: state.rooms.map((room) {
-                            return roomCard(
+                            return discoverCard(
                               id: room.id,
                               title: room.name,
                               description: room.description,
-                              isPrivate: !room.isPublic,
-                              time: '1 min ago',
+                              time: '5 min',
+                              context: context,
                             );
                           }).toList(),
                         );
                       }
-
                       if (state is RoomError) {
                         return Text(state.message);
                       }
-
                       return const SizedBox.shrink();
                     },
                   ),
@@ -104,9 +101,9 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
             ),
           ],
         ),
-
-        bottomNavigationBar: bottomNavBar(context, _selectedIndex)
+        bottomNavigationBar: bottomNavBar(context, _selectedIndex),
       ),
-    );
-  }
+    ),
+  );
+}
 }

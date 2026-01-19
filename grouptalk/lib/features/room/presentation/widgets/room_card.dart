@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget roomCard({
+  required String id,
   required String title,
   required String description,
   required bool isPrivate,

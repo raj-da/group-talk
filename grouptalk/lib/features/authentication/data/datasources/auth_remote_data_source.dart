@@ -69,6 +69,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException(errorMessage: 'User Creation failed');
       }
       await user.updateDisplayName(fullName);
+      await user.reload();
+      final updatedUser = FirebaseAuth.instance.currentUser;
+
+
+
+      debugPrint('fullName: $fullName ======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      debugPrint(
+        'User name: ${user.displayName} ====>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
+      );
 
       await firestore.collection('users').doc(user.uid).set({
         'fullName': fullName,
@@ -76,7 +85,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      return UserModel.fromFirebaseUser(user);
+      return UserModel.fromFirebaseUser(updatedUser);
     } on FirebaseAuthException catch (e) {
       throw ServerException(errorMessage: e.message ?? 'Registration Failed');
     }

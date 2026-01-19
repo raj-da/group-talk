@@ -1,7 +1,7 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget customHeader({required String userName, required VoidCallback onLogout}) {
+Widget customHeader({required String userName, required VoidCallback onLogout, required String mainMessage, required String smallMessage}) {
   return Container(
     padding: const EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 25),
     width: double.infinity,
@@ -49,8 +49,8 @@ Widget customHeader({required String userName, required VoidCallback onLogout}) 
           ],
         ),
         const SizedBox(height: 25),
-        const Text(
-          "My Study Rooms",
+        Text(
+          mainMessage,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
