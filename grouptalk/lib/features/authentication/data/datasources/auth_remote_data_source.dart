@@ -70,14 +70,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       await user.updateDisplayName(fullName);
       await user.reload();
-      final updatedUser = FirebaseAuth.instance.currentUser;
+      final updatedUser = firebaseAuth.currentUser ?? user;
 
-
-
-      debugPrint('fullName: $fullName ======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      debugPrint(
-        'User name: ${user.displayName} ====>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-      );
+      debugPrint('fullName: $fullName');
+      debugPrint('User name: ${updatedUser.displayName}');
 
       await firestore.collection('users').doc(user.uid).set({
         'fullName': fullName,
@@ -104,11 +100,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return firebaseAuth.authStateChanges().map((user) {
       if (user == null) return null;
 
-      return UserEntity(
-        id: user.uid,
-        email: user.email ?? '',
-        isEmailVerified: user.emailVerified,
-      );
+      // Return a UserModel that includes displayName so UI can read full name
+      return UserModel.fromFirebaseUser(user);
     });
   }
 }
