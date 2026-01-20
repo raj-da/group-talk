@@ -2,9 +2,9 @@
 
 GroupTalk is a Flutter-based study-room app that supports authentication, creating/joining study rooms, and an in-chat AI assistant. It uses Firebase for auth and Firestore for persistence, and an external AI endpoint for generated responses.
 
-[<img src="grouptalk/screenshots/my_room.png" width="250"/>](screenshots/my_room.png)
-[<img src="grouptalk/screenshots/discover_room.png" width="250"/>](screenshots/discover_room.png)
-[<img src="grouptalk/screenshots/chat.png" width="250"/>](screenshots/chat.png)
+[<img src="grouptalk/screenshots/my_room.png" width="250"/>](grouptalk/screenshots/my_room.png)
+[<img src="grouptalk/screenshots/discover_room.png" width="250"/>](grouptalk/screenshots/discover_room.png)
+[<img src="grouptalk/screenshots/chat.png" width="250"/>](grouptalk/screenshots/chat.png)
 
 ## Features
 
@@ -89,11 +89,3 @@ The project follows a clean architecture split:
 MIT
 
 ---
-
-Screenshots
-
-- Place your screenshots under `screenshots/` with the following filenames so the images render in this README:
-	- `screenshots/my_rooms.png` — My Rooms screen
-	- `screenshots/chat_ai.png` — Chat + AI screen
-
-If you want, I can generate simple placeholder PNGs or update the README with inline base64 images. Replace the placeholder files with real screenshots to show them in GitHub.
