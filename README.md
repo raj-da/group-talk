@@ -46,11 +46,11 @@ This project expects Firebase to be configured using `flutterfire` and the gener
 
 Files of interest:
 
-- Core routing: [grouptalk/lib/core/core/Route/app_router.dart](lib/core/core/Route/app_router.dart)
-- Auth BLoC: [grouptalk/lib/features/authentication/presentation/bloc/auth_bloc.dart](lib/features/authentication/presentation/bloc/auth_bloc.dart)
-- Chat BLoC: [grouptalk/lib/features/chat/presentation/bloc/chat_bloc.dart](lib/features/chat/presentation/bloc/chat_bloc.dart)
-- Chat UI: [grouptalk/lib/features/chat/presentation/screens/chat_page.dart](lib/features/chat/presentation/screens/chat_page.dart)
-- AI data source: [grouptalk/lib/features/chat/data/datasources/ai_remote_data_source.dart](lib/features/chat/data/datasources/ai_remote_data_source.dart)
+- Core routing: [grouptalk/lib/core/core/Route/app_router.dart](grouptalk/lib/core/core/Route/app_router.dart)
+- Auth BLoC: [grouptalk/lib/features/authentication/presentation/bloc/auth_bloc.dart](grouptalk/lib/features/authentication/presentation/bloc/auth_bloc.dart)
+- Chat BLoC: [grouptalk/lib/features/chat/presentation/bloc/chat_bloc.dart](grouptalk/lib/features/chat/presentation/bloc/chat_bloc.dart)
+- Chat UI: [grouptalk/lib/features/chat/presentation/screens/chat_page.dart](grouptalk/lib/features/chat/presentation/screens/chat_page.dart)
+- AI data source: [grouptalk/lib/features/chat/data/datasources/ai_remote_data_source.dart](grouptalk/lib/features/chat/data/datasources/ai_remote_data_source.dart)
 
 ## AI Assistant
 
