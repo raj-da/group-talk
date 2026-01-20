@@ -13,7 +13,7 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
 
   AiRemoteDataSourceImpl({required this.dio});
 
-  static const String _apiKey = 'AIzaSyAHykdumc7KSBfCfWnxZZEnjb6v7EbXtBk';
+  static const String _apiKey = '';
   static const String _baseUrl =
       'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent';
 
