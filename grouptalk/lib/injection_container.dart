@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grouptalk/core/network/network_info.dart';
@@ -10,6 +11,14 @@ import 'package:grouptalk/features/authentication/domain/usecases/login_user.dar
 import 'package:grouptalk/features/authentication/domain/usecases/logout_user.dart';
 import 'package:grouptalk/features/authentication/domain/usecases/register_user.dart';
 import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:grouptalk/features/chat/data/Repository/chat_repository_impl.dart';
+import 'package:grouptalk/features/chat/data/datasources/ai_remote_data_source.dart';
+import 'package:grouptalk/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:grouptalk/features/chat/domain/repository/chat_repository.dart';
+import 'package:grouptalk/features/chat/domain/usecases/get_messages.dart';
+import 'package:grouptalk/features/chat/domain/usecases/send_ai_message.dart';
+import 'package:grouptalk/features/chat/domain/usecases/send_message.dart';
+import 'package:grouptalk/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:grouptalk/features/room/data/datasources/room_remote_data_source.dart';
 import 'package:grouptalk/features/room/data/repositories/room_repository_impl.dart';
 import 'package:grouptalk/features/room/domain/repositories/room_repository.dart';
@@ -41,6 +50,12 @@ Future<void> init() async {
   sl.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker.createInstance(),
   );
+
+  //* ========================
+  //* HTTP Clinet
+  //* ========================
+  // Dio
+  sl.registerLazySingleton<Dio>(() => Dio());
 
   //* ========================
   //* Authentication Featur
@@ -80,7 +95,7 @@ Future<void> init() async {
   );
 
   //* ========================
-  //* Authentication Featur
+  //* Authentication Feature
   //* ========================
 
   // Bloc
@@ -109,5 +124,33 @@ Future<void> init() async {
   // Datasource
   sl.registerLazySingleton<RoomRemoteDataSource>(
     () => RoomRemoteDataSourceImpl(firestore: sl(), auth: sl()),
+  );
+
+  //* ========================
+  //* Chat Feature
+  //* ========================
+  // Bloc
+  sl.registerFactory<ChatBloc>(
+    () => ChatBloc(getMessages: sl(), sendMessage: sl(), sendAIMessage: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton<GetMessages>(() => GetMessages(repository: sl()));
+  sl.registerLazySingleton<SendMessage>(() => SendMessage(repository: sl()));
+  sl.registerLazySingleton<SendAiMessage>(
+    () => SendAiMessage(repository: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(chatDataSource: sl(), aiDataSource: sl()),
+  );
+
+  // Datasource
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<AiRemoteDataSource>(
+    () => AiRemoteDataSourceImpl(dio: sl()),
   );
 }

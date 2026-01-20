@@ -5,6 +5,7 @@ import 'package:grouptalk/core/router/auth_notifier.dart';
 import 'package:grouptalk/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:grouptalk/features/authentication/presentation/screens/login_screen.dart';
 import 'package:grouptalk/features/authentication/presentation/screens/register_screen.dart';
+import 'package:grouptalk/features/chat/presentation/screens/chat_page.dart';
 import 'package:grouptalk/features/room/presentation/screens/descover_rooms.dart';
 import 'package:grouptalk/features/room/presentation/screens/my_rooms_screen.dart';
 // import 'package:grouptalk/main.dart';
@@ -15,16 +16,6 @@ final authNotifier = AuthNotifier(authBloc: di.sl<AuthBloc>());
 final GoRouter router = GoRouter(
   refreshListenable: authNotifier,
   initialLocation: '/login',
-  // redirect: (context, state) {
-  //   debugPrint('I am here! ==================================>');
-  //   final loggedIn = authNotifier.isLoggedIn;
-  //   final loggingIn = state.matchedLocation == '/login';
-
-  //   if (!loggedIn && !loggingIn) return '/login';
-  //   if (loggedIn && loggingIn) return '/home';
-
-  //   return null;
-  // },
   routes: [
     GoRoute(
       path: '/login',
@@ -48,6 +39,21 @@ final GoRouter router = GoRouter(
       path: '/publicRooms',
       name: RouteName.discoverRooms,
       builder: (context, state) => const DescoverRooms(),
+    ),
+
+    GoRoute(
+      path: '/chat',
+      name: RouteName.chat,
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+
+        return ChatPage(
+          roomId: data['roomId'],
+          roomName: data['roomName'],
+          userId: data['userId'] ?? '',
+          userName: data['userName'],
+        );
+      },
     ),
   ],
 );

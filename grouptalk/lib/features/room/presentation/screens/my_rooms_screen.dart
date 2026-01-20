@@ -21,6 +21,8 @@ class MyRoomsScreen extends StatefulWidget {
 class _MyRoomsScreenState extends State<MyRoomsScreen> {
   int _selectedIndex = 0;
   String? _lastUserName;
+  String? userId;
+  String? userName;
 
   @override
   void initState() {
@@ -44,6 +46,8 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
               builder: (context, state) {
                 if (state is AuthAuthenticated) {
                   debugPrint("My room Screen ============================>");
+                  userId = state.user.id;
+                  userName = state.user.name;
                   return customHeader(
                     userName: state.user.name ?? '',
                     onLogout: () {
@@ -94,6 +98,9 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
                               description: room.description,
                               isPrivate: !room.isPublic,
                               time: '1 min ago',
+                              context: context,
+                              userId: userId,
+                              userName: userName,
                             );
                           }).toList(),
                         );

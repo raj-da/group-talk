@@ -4,4 +4,5 @@ class RouteName {
   static const String register = 'register';
   static const String home = 'myRooms';
   static const String discoverRooms = 'discoverRooms';
+  static const String chat = 'chat';
 }
