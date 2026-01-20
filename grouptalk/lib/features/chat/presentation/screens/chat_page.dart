@@ -32,9 +32,11 @@ class _ChatPageState extends State<ChatPage> {
   // (Messages come from the bloc state — no local dummy list needed)
 
   void _sendMessage() {
+    debugPrint('_isActive == $_isActive ---------------------------------->');
     final text = _textController.text.trim();
     if (text.isEmpty) return;
 
+    debugPrint('_sendAiMessage ---------------------------------------->');
     context.read<ChatBloc>().add(
       SendUserMessageEvent(
         message: MessageEntity(
@@ -50,6 +52,32 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (_isActive) {
+      debugPrint(
+        'if Case in _sendMessage ----------------------------------------->',
+      );
+      context.read<ChatBloc>().add(
+        SendAiMessageEvent(roomId: widget.roomId, prompt: text),
+      );
+    }
+
+    _textController.clear();
+  }
+
+  void _sendAiMessage() {
+    debugPrint('_isActive == $_isActive ---------------------------------->');
+    final text = _textController.text.trim();
+    if (text.isEmpty) return;
+
+    // _sendMessage();
+    debugPrint('_sendAiMessage ---------------------------------------->');
+    context.read<ChatBloc>().add(
+      SendAiMessageEvent(prompt: text, roomId: widget.roomId),
+    );
+
+    if (_isActive) {
+      debugPrint(
+        'If case in _sendAiMessage() ------------------------------------>',
+      );
       context.read<ChatBloc>().add(
         SendAiMessageEvent(roomId: widget.roomId, prompt: text),
       );
@@ -71,7 +99,7 @@ class _ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: primaryGreen,
         elevation: 0,
         leading: IconButton(
@@ -165,8 +193,8 @@ class _ChatPageState extends State<ChatPage> {
                         type: msg.isAI
                             ? MessageType.ai
                             : msg.senderId == widget.userId
-                                ? MessageType.user
-                                : MessageType.other,
+                            ? MessageType.user
+                            : MessageType.other,
                       );
                     } else {
                       return const AIAnalyzingWidget();
@@ -209,7 +237,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: _sendMessage,
+                    onPressed: _isActive ? _sendAiMessage : _sendMessage,
                   ),
                 ),
               ],

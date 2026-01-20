@@ -52,27 +52,30 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatSending(messages: currentMessages, isAi: false));
 
     final result = await sendMessage(message: event.message);
-    result.fold(
-      (failure) => emit(ChatError(message: failure.failureMassage)),
-      (
-        _,
-      ) async {
-      final messagesResult = await getMessages(roomId: event.message.roomId);
-      messagesResult.fold(
+    if (result.isLeft()) {
+      result.fold(
         (failure) => emit(ChatError(message: failure.failureMassage)),
-        (messages) => emit(ChatLoaded(messages: messages)),
+        (_) => null,
       );
-    });
+      return;
+    }
+
+    // message sent successfully — fetch latest messages and emit
+    final messagesResult = await getMessages(roomId: event.message.roomId);
+    messagesResult.fold(
+      (failure) => emit(ChatError(message: failure.failureMassage)),
+      (messages) => emit(ChatLoaded(messages: messages)),
+    );
   }
 
   Future<void> _onSendAiMessage(
     SendAiMessageEvent event,
     Emitter<ChatState> emit,
   ) async {
-    if (state is! ChatLoaded) {
-      emit(ChatError(message: "Error! You can't send right now"));
-      return;
-    }
+    // if (state is! ChatLoaded) {
+    //   emit(ChatError(message: "Error! You can't send right now"));
+    //   return;
+    // }
 
     final currentMessages = (state as ChatLoaded).messages;
 
@@ -82,16 +85,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       roomId: event.roomId,
       prompt: event.prompt,
     );
-    result.fold(
-      (failure) => emit(ChatError(message: failure.failureMassage)),
-      (
-        _,
-      ) async {
-      final messageResult = await getMessages(roomId: event.roomId);
-      messageResult.fold(
+    if (result.isLeft()) {
+      result.fold(
         (failure) => emit(ChatError(message: failure.failureMassage)),
-        (messages) => emit(ChatLoaded(messages: messages)),
+        (_) => null,
       );
-    });
+      return;
+    }
+
+    final messageResult = await getMessages(roomId: event.roomId);
+    messageResult.fold(
+      (failure) => emit(ChatError(message: failure.failureMassage)),
+      (messages) => emit(ChatLoaded(messages: messages)),
+    );
   }
 }

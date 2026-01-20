@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:grouptalk/core/error/failure.dart';
 import 'package:grouptalk/features/chat/data/datasources/ai_remote_data_source.dart';
 import 'package:grouptalk/features/chat/data/datasources/chat_remote_data_source.dart';
@@ -15,6 +16,7 @@ class ChatRepositoryImpl implements ChatRepository {
     required this.aiDataSource,
   });
 
+  @override
   Future<Either<Failure, List<MessageEntity>>> getMessages({
     required String roomId,
   }) async {
@@ -31,6 +33,9 @@ class ChatRepositoryImpl implements ChatRepository {
     required String prompt,
   }) async {
     try {
+      debugPrint(
+        'sendAiMessage repository impl -------------------------------------------------------------------->',
+      );
       final aiText = await aiDataSource.generateResponse(prompt: prompt);
 
       final aiMessage = MessageModel(
@@ -46,6 +51,7 @@ class ChatRepositoryImpl implements ChatRepository {
       await chatDataSource.sendMessage(message: aiMessage);
       return Right(null);
     } catch (e) {
+      debugPrint('Error: ----------------------------------> ${e.toString()}');
       return Left(ServerFailure(failureMassage: e.toString()));
     }
   }
