@@ -141,37 +141,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-      // child: Scaffold(
-      //   appBar: AppBar(title: const Text('Register')),
-      //   body: Padding(
-      //     padding: const EdgeInsets.all(16),
-      //     child: Column(
-      //       children: [
-      //         TextField(
-      //           controller: _emailController,
-      //           decoration: const InputDecoration(labelText: 'Email'),
-      //         ),
-      //         const SizedBox(height: 12),
-      //         TextField(
-      //           controller: _passwordController,
-      //           obscureText: true,
-      //           decoration: const InputDecoration(labelText: 'Password'),
-      //         ),
-      //         const SizedBox(height: 24),
-      //         BlocBuilder<AuthBloc, AuthState>(
-      //           builder: (context, state) {
-      //             return state is AuthLoading
-      //                 ? const CircularProgressIndicator()
-      //                 : ElevatedButton(
-      //                     onPressed: _register,
-      //                     child: const Text('Register'),
-      //                   );
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

@@ -131,43 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      // child: Scaffold(
-      //   appBar: AppBar(title: const Text('Login')),
-      //   body: Padding(
-      //     padding: const EdgeInsets.all(16),
-      //     child: Column(
-      //       children: [
-      //         TextField(
-      //           controller: _emailController,
-      //           decoration: const InputDecoration(labelText: 'Email'),
-      //         ),
-      //         const SizedBox(height: 12),
-      //         TextField(
-      //           controller: _passwordController,
-      //           obscureText: true,
-      //           decoration: const InputDecoration(labelText: 'Password'),
-      //         ),
-      //         const SizedBox(height: 24),
-      //         BlocBuilder<AuthBloc, AuthState>(
-      //           builder: (context, state) {
-      //             return state is AuthLoading
-      //                 ? const CircularProgressIndicator()
-      //                 : ElevatedButton(
-      //                     onPressed: _login,
-      //                     child: const Text('Login'),
-      //                   );
-      //           },
-      //         ),
-      //         TextButton(
-      //           onPressed: () {
-      //             context.goNamed(RouteName.register);
-      //           },
-      //           child: const Text('Create an account'),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }
