@@ -18,6 +18,12 @@ Widget bottomNavBar(BuildContext context, int selectedIndex) {
           case 1:
             context.goNamed(RouteName.discoverRooms);
             break;
+          case 2:
+            context.goNamed('leaderboard');
+            break;
+          case 3:
+            context.goNamed('profile');
+            break;
         }
       }
     },

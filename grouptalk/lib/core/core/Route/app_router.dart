@@ -10,6 +10,8 @@ import 'package:grouptalk/features/room/presentation/screens/descover_rooms.dart
 import 'package:grouptalk/features/room/presentation/screens/my_rooms_screen.dart';
 // import 'package:grouptalk/main.dart';
 import 'package:grouptalk/injection_container.dart' as di;
+import 'package:grouptalk/underConstruction/leaderboard_screen.dart';
+import 'package:grouptalk/underConstruction/profile_screen.dart';
 
 final authNotifier = AuthNotifier(authBloc: di.sl<AuthBloc>());
 
@@ -54,6 +56,19 @@ final GoRouter router = GoRouter(
           userName: data['userName'],
         );
       },
+    ),
+
+    //! Temporary Routes until feature is constructed
+    GoRoute(
+      path: '/leaderboard',
+      name: 'leaderboard',
+      builder: (context, state) => const LeaderboardScreen(),
+    ),
+
+    GoRoute(
+      path: '/profile',
+      name: 'profile',
+      builder: (context, state) => const ProfileScreen(),
     ),
   ],
 );
