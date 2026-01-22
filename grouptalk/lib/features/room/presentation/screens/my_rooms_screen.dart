@@ -45,7 +45,6 @@ class _MyRoomsScreenState extends State<MyRoomsScreen> {
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthAuthenticated) {
-                  debugPrint("My room Screen ============================>");
                   userId = state.user.id;
                   userName = state.user.name;
                   return customHeader(

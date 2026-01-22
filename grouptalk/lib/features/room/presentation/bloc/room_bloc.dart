@@ -22,7 +22,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     required this.joinRoom,
   }) : super(RoomInitial()) {
     on<RoomEvent>((event, emit) {
-      // TODO: implement event handler
     });
 
     on<CreateRoomEvent>(_onCreateRoom);
