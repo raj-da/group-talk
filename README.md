@@ -1,4 +1,4 @@
-# Grouptalk # GroupTalk
+# Grouptalk
 
 GroupTalk is a Flutter-based study-room app that supports authentication, creating/joining study rooms, and an in-chat AI assistant. It uses Firebase for auth and Firestore for persistence, and an external AI endpoint for generated responses.
 
